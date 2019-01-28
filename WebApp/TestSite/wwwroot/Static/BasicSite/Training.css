@@ -1,0 +1,10 @@
+﻿.Nav td input
+{
+    color: black; background-color: rgb(238, 238, 238); width: 100%; font-size: medium; font-family: 'Times New Roman'; font-weight: bold;
+}
+
+.Nav td.Selected input
+{
+     color: white;
+    background-color: #79be42;
+}

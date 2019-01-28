@@ -1,0 +1,69 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="Training.css">
+</head>
+<body onload="asyncUpdate()">
+    <div class="jumbotron" style="background-color: rgb(238, 238, 238);">
+        <img style="display:block; margin:auto; " src="/Images/Magenic-Logo.png">
+        <h2 class="text-center">Practice Site 2</h2>
+    </div>
+    <table style="width: 100%;" class="Nav">
+        <tr>
+            <td style="width: 25%;">
+                <input id="Home" type="submit" value="Home" />
+            </td>
+            <td style="width: 25%;">
+                <input id="HowWork" type="submit" value="How it works" />
+            </td>
+            <td class="Selected" style="width: 25%;">
+                <input id="Async" type="submit" value="Async page" />
+            </td>
+            <td style="width: 25%;">
+                <input id="About" type="submit" value="About" />
+            </td>
+        </tr>
+    </table>
+    <div id="AsyncContent">
+    <label id="Label" >Loading</label><br />
+    <select id="Selector">
+    </select>
+
+    </div>
+
+
+
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js">
+    </script>
+        
+    <script>
+        function asyncUpdate() {
+            $("#AsyncContent").hide();
+            var lingerTime = (Math.floor(Math.random() * (10 - 1 + 1)) + 1) * 1000;
+            var myVar = setInterval(function () { myTimer() }, lingerTime);
+
+            function myTimer() {
+                var x = document.getElementById("Selector");
+                var option = document.createElement("option");
+                option.text = "First";
+                x.add(option);
+                option = document.createElement("option");
+                option.text = "Second";
+                x.add(option);
+                option = document.createElement("option");
+                option.text = "Third";
+                x.add(option);
+                $("#AsyncContent").show();
+                document.getElementById('Label').innerHTML = 'Options';
+
+                clearInterval(myVar);
+            }
+        };
+    </script>
+    <script src="navbar.js">
+    </script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="Training.css">
+</head>
+<body>
+    <div class="jumbotron" style="background-color: rgb(238, 238, 238);">
+        <img style="display:block; margin:auto; " src="/Images/Magenic-Logo.png">
+        <center>
+            <h2 class="text-center">Practice Site 2</h2>
+        </center>
+    </div>
+    <p style="font-family: Arial, Helvetica, sans-serif; font-size: large">
+        Login<br />
+        <br />
+    </p>
+    Username:
+        <input id="UserName" type="text" /><br /><br />
+    Password:
+        <input id="Password" type="password" /><br /><br />
+    <button id="Login">Login</button><br />
+    <p id="LoginError" style="display: none; color: #FF0000;">Invalid name or password</p>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js">
+    </script>
+    <script>
+        $(document).ready(function () {
+            $("#Login").click(function () {
+                if (document.getElementById("UserName").value == "Ted" && document.getElementById("Password").value == "123") {
+                    location.href = 'HomePage.html';
+                }
+                else {
+                    $("#LoginError").show();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
