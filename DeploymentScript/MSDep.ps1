@@ -19,3 +19,10 @@ $msdeployArguments =  @($($sorce), '-verb:sync', $($dest), $($siteNameParam)
     "-enablerule:AppOffline")
 
  & "$(Get-MSWebDeployInstallPath)" $msdeployArguments
+
+ 
+ # Wake-up IIS
+$url =  $($deploySetting.destinationAppUrl)
+Invoke-WebRequest $url -usebasicparsing
+Start-Sleep -s 5
+Invoke-WebRequest $url -usebasicparsing
