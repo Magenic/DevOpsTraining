@@ -12,7 +12,7 @@
   </MSTest>
   <TestRunParameters>
     <Parameter name="SeleniumMaqs:WebSiteBase" value="https://OVERRIDE.azurewebsites.net/" />
-    <Parameter name="SeleniumMaqs:Browser" value="Override" />
+    <Parameter name="SeleniumMaqs:Browser" value="Chrome" />
     <Parameter name="RemoteSeleniumCapsMaqs:accessKey" value="Override" />
     <Parameter name="RemoteSeleniumCapsMaqs:browserName" value="Override" />
     <Parameter name="RemoteSeleniumCapsMaqs:platform" value="Override" />
