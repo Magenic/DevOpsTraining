@@ -10,7 +10,11 @@
       <Scope>MethodLevel</Scope>
     </Parallelize>
   </MSTest>
-  <TestRunParameters>  
-    <!--<Parameter name="SeleniumMaqs:Adding" value="SAMPLE" />-->
+  <TestRunParameters>
+    <Parameter name="SeleniumMaqs:WebSiteBase" value="https://OVERRIDE.azurewebsites.net/" />
+    <Parameter name="SeleniumMaqs:Browser" value="Override" />
+    <Parameter name="RemoteSeleniumCapsMaqs:accessKey" value="Override" />
+    <Parameter name="RemoteSeleniumCapsMaqs:browserName" value="Override" />
+    <Parameter name="RemoteSeleniumCapsMaqs:platform" value="Override" />
   </TestRunParameters>  
 </RunSettings>
