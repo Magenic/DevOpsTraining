@@ -28,7 +28,7 @@ namespace PageModel
         /// </summary>
         public LazyElement PhysicalAddress
         {
-            get { return new LazyElement(this.testObject, By.CssSelector("#PhysicalAddress"), "Physical Address"); }
+            get { return this.GetLazyElement(By.CssSelector("#PhysicalAddress"), "Physical Address"); }
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace PageModel
         /// </summary>
         public LazyElement CompanyName
         {
-            get { return new LazyElement(this.testObject, By.CssSelector("#companyName"), "Company Name"); }
+            get { return this.GetLazyElement(By.CssSelector("#companyName"), "Company Name"); }
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace PageModel
         /// </summary>
         public LazyElement EmailContact
         {
-            get { return new LazyElement(this.testObject, By.CssSelector("#EmailContact"), "Email Contact"); }
+            get { return this.GetLazyElement(By.CssSelector("#EmailContact"), "Email Contact"); }
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace PageModel
         /// <returns>True if the page was loaded</returns>
         public override bool IsPageLoaded()
         {
-            return this.testObject.WebDriver.Url.Trim('/').Equals(PageUrl.Trim('/'), StringComparison.CurrentCultureIgnoreCase);
+            return this.TestObject.WebDriver.Url.Trim('/').Equals(PageUrl.Trim('/'), StringComparison.CurrentCultureIgnoreCase);
         }
     }
 }

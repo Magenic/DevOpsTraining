@@ -26,7 +26,7 @@ namespace PageModel.SubSite
         /// </summary>
         public LazyElement UserName
         {
-            get { return new LazyElement(testObject, By.CssSelector("#UserName"), "UserName"); }
+            get { return this.GetLazyElement(By.CssSelector("#UserName"), "UserName"); }
         }
 
         /// <summary>
@@ -34,16 +34,12 @@ namespace PageModel.SubSite
         /// </summary>
         public LazyElement Password
         {
-            get { return new LazyElement(testObject, By.CssSelector("#Password"), "Password"); }
+            get { return this.GetLazyElement(By.CssSelector("#Password"), "Password"); }
         }
 
-        /// <summary>
-        /// The login button element 'By' finder
-        /// </summary>
-        private static By loginButton = By.CssSelector("#Login");
         public LazyElement LoginButton
         {
-            get { return new LazyElement(testObject, By.CssSelector("#Login"), "Login button"); }
+            get { return this.GetLazyElement(By.CssSelector("#Login"), "Login button"); }
         }
 
         /// <summary>
@@ -51,7 +47,7 @@ namespace PageModel.SubSite
         /// </summary>
         public LazyElement LoginError
         {
-            get { return new LazyElement(testObject, By.CssSelector("#LoginError"), "LoginError"); }
+            get { return this.GetLazyElement(By.CssSelector("#LoginError"), "LoginError"); }
         }
 
         /// <summary>
@@ -92,8 +88,7 @@ namespace PageModel.SubSite
             EnterCredentials(userName, password);
             LoginButton.Click();
 
-            HomePage newPage = new HomePage(testObject);
-            return newPage;
+            return new HomePage(this.TestObject);
         }
 
         /// <summary>

@@ -4,7 +4,6 @@
 // </copyright>
 // <summary>Sample Selenium test class</summary>
 //--------------------------------------------------
-using Magenic.Maqs.BaseSeleniumTest;
 using Magenic.Maqs.Utilities.Helper;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PageModel.SubSite;
@@ -16,10 +15,23 @@ namespace Tests.SubSite
     /// Sample test class
     /// </summary>
     [TestClass]
-    public class NavigationTests : BaseSeleniumTest
+    public class NavigationTests : BaseSelenium
     {
         private readonly string userName = Config.GetGeneralValue("UserName");
         private readonly string password = Config.GetGeneralValue("Password");
+
+        /// <summary>
+        /// Valid login test
+        /// </summary>
+        [TestMethod]
+        [TestCategory(TestCategories.Smoke)]
+        public void ValidLoginTest()
+        {
+            LoginPage login = new LoginPage(this.TestObject);
+            login.OpenLoginPage();
+            HomePage home = login.LoginWithValidCredentials(userName, password);
+            Assert.IsTrue(home.IsPageLoaded());
+        }
 
         /// <summary>
         /// Invalid login test
@@ -40,6 +52,7 @@ namespace Tests.SubSite
             LoginPage login = new LoginPage(this.TestObject);
             login.OpenLoginPage();
             login.LoginWithInvalidCredentials(badUserName, badPassword);
+            Assert.IsTrue(login.IsPageLoaded());
         }
 
         /// <summary>

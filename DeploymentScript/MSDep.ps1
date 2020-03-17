@@ -18,9 +18,9 @@ $msdeployArguments =  @($($sorce), '-verb:sync', $($dest), $($siteNameParam)
     "-AllowUntrusted",
     "-enablerule:AppOffline")
 
+# Deploy
  & "$(Get-MSWebDeployInstallPath)" $msdeployArguments
 
- 
  # Wake-up IIS
 $url =  $($deploySetting.destinationAppUrl)
 Invoke-WebRequest $url -usebasicparsing

@@ -1,7 +1,5 @@
-﻿using Magenic.Maqs.BaseSeleniumTest;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PageModel;
-using PageModel.SubSite.Pages;
 
 namespace Tests
 {

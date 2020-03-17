@@ -22,7 +22,7 @@ namespace PageModel
         /// </summary>
         private LazyElement SiteRootNavigation
         {
-            get { return new LazyElement(this.testObject, By.CssSelector("#RootNav"), "RootNav"); }
+            get { return this.GetLazyElement(By.CssSelector("#RootNav"), "RootNav"); }
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace PageModel
         /// </summary>
         private LazyElement HomeNavigation
         {
-            get { return new LazyElement(this.testObject, By.CssSelector("#Home"), "Home"); }
+            get { return this.GetLazyElement(By.CssSelector("#Home"), "Home"); }
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace PageModel
         /// </summary>
         private LazyElement AboutNavigation
         {
-            get { return new LazyElement(this.testObject, By.CssSelector("#About"), "About"); }
+            get { return this.GetLazyElement(By.CssSelector("#About"), "About"); }
         }
 
         /// <summary>
@@ -46,31 +46,31 @@ namespace PageModel
         /// </summary>
         private LazyElement ContactNavigation
         {
-            get { return new LazyElement(this.testObject, By.CssSelector("#Contact"), "Contact"); }
+            get { return this.GetLazyElement(By.CssSelector("#Contact"), "Contact"); }
         }
 
         public Home OpenSiteRootTab()
         {
             SiteRootNavigation.Click();
-            return new Home(this.testObject);
+            return new Home(this.TestObject);
         }
 
         public Home OpenHomeTab()
         {
             HomeNavigation.Click();
-            return new Home(this.testObject);
+            return new Home(this.TestObject);
         }
 
         public About OpenAboutTab()
         {
             AboutNavigation.Click();
-            return new About(this.testObject);
+            return new About(this.TestObject);
         }
 
         public Contact OpenContactTab()
         {
             ContactNavigation.Click();
-            return new Contact(this.testObject);
+            return new Contact(this.TestObject);
         }
     }
 }

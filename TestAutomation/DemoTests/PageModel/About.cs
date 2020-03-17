@@ -27,7 +27,7 @@ namespace PageModel
         /// <returns>True if the page was loaded</returns>
         public override bool IsPageLoaded()
         {
-            return this.testObject.WebDriver.Url.Trim('/').Equals(PageUrl.Trim('/'), StringComparison.CurrentCultureIgnoreCase);
+            return this.TestObject.WebDriver.Url.Trim('/').Equals(PageUrl.Trim('/'), StringComparison.CurrentCultureIgnoreCase);
         }
     }
 }

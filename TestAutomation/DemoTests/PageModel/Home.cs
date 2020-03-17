@@ -25,7 +25,7 @@ namespace PageModel
 
         public void OpenPage()
         {
-            this.testObject.WebDriver.Navigate().GoToUrl(PageUrl);
+            this.TestObject.WebDriver.Navigate().GoToUrl(PageUrl);
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace PageModel
         /// </summary>
         private LazyElement HowToSection
         {
-            get { return new LazyElement(this.testObject, By.CssSelector("#HowTo"), "How to section"); }
+            get { return this.GetLazyElement(By.CssSelector("#HowTo"), "How to section"); }
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace PageModel
         /// <returns>True if the page was loaded</returns>
         public override bool IsPageLoaded()
         {
-            return this.testObject.WebDriver.Url.Trim('/').Equals(PageUrl.Trim('/'), StringComparison.CurrentCultureIgnoreCase);
+            return HowToSection.Exists && this.TestObject.WebDriver.Url.Trim('/').Equals(PageUrl.Trim('/'), StringComparison.CurrentCultureIgnoreCase);
         }
     }
 }

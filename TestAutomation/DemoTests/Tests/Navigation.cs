@@ -1,6 +1,4 @@
-﻿using Magenic.Maqs.BaseSeleniumTest;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OpenQA.Selenium;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PageModel;
 
 namespace Tests

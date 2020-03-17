@@ -19,7 +19,7 @@ namespace PageModel.SubSite.Pages
         /// </summary>
         public LazyElement HowWorks
         {
-            get { return new LazyElement(this.testObject, By.CssSelector("#HowWorks"), "HowWorks"); }
+            get { return this.GetLazyElement(By.CssSelector("#HowWorks"), "HowWorks"); }
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace PageModel.SubSite.Pages
         /// </summary>
         public override bool IsPageLoaded()
         {
-            return this.testObject.WebDriver.Wait().UntilElementExist(HowWorks.By);
+            return this.TestObject.WebDriver.Wait().UntilElementExist(HowWorks.By);
         }
     }
 }

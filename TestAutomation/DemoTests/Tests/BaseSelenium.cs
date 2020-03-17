@@ -3,12 +3,12 @@ using Magenic.Maqs.Utilities.Helper;
 using Magenic.Maqs.Utilities.Logging;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Remote;
 using System;
-using System.IO;
+using System.Collections.Generic;
 
 namespace Tests
 {
-   // [TestClass]
     public class BaseSelenium : BaseSeleniumTest
     {
         [TestInitialize]
@@ -19,11 +19,22 @@ namespace Tests
                 try
                 {
                     string name = TestContext.FullyQualifiedTestClassName + "." + TestContext.TestName;
-                    ((IJavaScriptExecutor)this.WebDriver).ExecuteScript("sauce:job-name=" + name);
+
+                    RemoteBrowserType remoteBrowser = SeleniumConfig.GetRemoteBrowserType();
+                    string remotePlatform = SeleniumConfig.GetRemotePlatform();
+                    string remoteBrowserVersion = SeleniumConfig.GetRemoteBrowserVersion();
+                    Dictionary<string, object> capabilities = SeleniumConfig.GetRemoteCapabilitiesAsObjects();
+                    capabilities.Add("build", Environment.GetEnvironmentVariable("SAUCE_BUILD_NAME"));
+                    capabilities.Add("name", name);
+                    capabilities.Add("extendedDebugging", Config.GetValueForSection(ConfigSection.SeleniumMaqs, "extendedDebugging"));
+
+                    var options = WebDriverFactory.GetRemoteOptions(remoteBrowser, remotePlatform, remoteBrowserVersion, capabilities);
+
+                    this.WebDriver = new RemoteWebDriver(SeleniumConfig.GetHubUri(), options.ToCapabilities(), SeleniumConfig.GetCommandTimeout());
                 }
                 catch (Exception e)
                 {
-                    this.Log.LogMessage(MessageType.WARNING, "Failed to set Sauce name because: " + e.Message);
+                    Log.LogMessage(MessageType.WARNING, "Failed to set Sauce name because: " + e.Message);
                 }
             }
         }
@@ -31,28 +42,24 @@ namespace Tests
         [TestCleanup]
         public new void Teardown()
         {
-            try
-            {
-                bool passed = this.GetResultType() == TestResultType.PASS;
+            bool passed = GetResultType() == TestResultType.PASS;
 
-                if (SeleniumConfig.GetBrowserName().Equals("Remote", System.StringComparison.CurrentCultureIgnoreCase))
+            if (SeleniumConfig.GetBrowserName().Equals("Remote", System.StringComparison.CurrentCultureIgnoreCase))
+            {
+                try
                 {
-                    try
-                    {
-                        // Logs the result to Sauce Labs
-                        ((IJavaScriptExecutor)this.WebDriver).ExecuteScript("sauce:job-result=" + (passed ? "passed" : "failed"));
-                        ((IJavaScriptExecutor)this.WebDriver).ExecuteScript("sauce:job-build=" + Config.GetGeneralValue("Build", "0.0.0.0"));
-                    }
-                    catch (Exception e)
-                    {
-                        this.Log.LogMessage(MessageType.WARNING, "Failed to set Sauce result because: " + e.Message);
-                    }
+                    // Logs the result to Sauce Labs
+                    ((IJavaScriptExecutor)WebDriver).ExecuteScript("sauce:job-result=" + (passed ? "passed" : "failed"));
+
+
+                }
+                catch (Exception e)
+                {
+                    Log.LogMessage(MessageType.WARNING, "Failed to set Sauce result because: " + e.Message);
                 }
             }
-            finally
-            {
-                base.Teardown();
-            }
+
+            base.Teardown();
         }
     }
 }

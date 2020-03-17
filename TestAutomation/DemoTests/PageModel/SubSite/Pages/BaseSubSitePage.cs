@@ -14,7 +14,7 @@ namespace PageModel.SubSite.Pages
         /// </summary>
         private LazyElement HomeNavigation
         {
-            get { return new LazyElement(this.testObject, By.CssSelector("#Home"), "Home"); }
+            get { return this.GetLazyElement(By.CssSelector("#Home"), "Home"); }
         }
 
         /// <summary>
@@ -22,7 +22,7 @@ namespace PageModel.SubSite.Pages
         /// </summary>
         private LazyElement HowWorkNavigation
         {
-            get { return new LazyElement(this.testObject, By.CssSelector("#HowWork"), "HowWork"); }
+            get { return this.GetLazyElement(By.CssSelector("#HowWork"), "HowWork"); }
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace PageModel.SubSite.Pages
         /// </summary>
         private LazyElement AsyncNavigation
         {
-            get { return new LazyElement(this.testObject, By.CssSelector("#Async"), "Async"); }
+            get { return this.GetLazyElement(By.CssSelector("#Async"), "Async"); }
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace PageModel.SubSite.Pages
         /// </summary>
         private LazyElement AboutNavigation
         {
-            get { return new LazyElement(this.testObject, By.CssSelector("#About"), "About"); }
+            get { return this.GetLazyElement(By.CssSelector("#About"), "About"); }
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace PageModel.SubSite.Pages
         public HomePage ClickHomeNavigation()
         {
             HomeNavigation.Click();
-            return new HomePage(this.testObject);
+            return new HomePage(this.TestObject);
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace PageModel.SubSite.Pages
         public HowWorkPage ClickHowWorkNavigation()
         {
             HowWorkNavigation.Click();
-            return new HowWorkPage(this.testObject);
+            return new HowWorkPage(this.TestObject);
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace PageModel.SubSite.Pages
         public AsyncPage ClickAsyncNavigation()
         {
             AsyncNavigation.Click();
-            return new AsyncPage(this.testObject);
+            return new AsyncPage(this.TestObject);
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace PageModel.SubSite.Pages
         public AboutPage ClickAboutNavigation()
         {
             AboutNavigation.Click();
-            return new AboutPage(this.testObject);
+            return new AboutPage(this.TestObject);
         }
     }
 }

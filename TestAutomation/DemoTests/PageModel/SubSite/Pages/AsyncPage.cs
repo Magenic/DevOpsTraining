@@ -1,10 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OpenQA.Selenium;
-using Magenic.Maqs.BaseSeleniumTest;
-using Magenic.Maqs.Utilities;
-using Magenic.Maqs.Utilities.Helper;
-using System;
+﻿using Magenic.Maqs.BaseSeleniumTest;
 using Magenic.Maqs.BaseSeleniumTest.Extensions;
+using OpenQA.Selenium;
 
 namespace PageModel.SubSite.Pages
 {
@@ -20,7 +16,7 @@ namespace PageModel.SubSite.Pages
 
         public LazyElement AsyncContent
         {
-            get { return new LazyElement(this.testObject, By.CssSelector("#AsyncContent"), "AsyncContent"); }
+            get { return this.GetLazyElement(By.CssSelector("#AsyncContent"), "AsyncContent"); }
         }
 
         /// <summary>
@@ -37,7 +33,7 @@ namespace PageModel.SubSite.Pages
         /// </summary>
         public override bool IsPageLoaded()
         {
-            return this.testObject.WebDriver.Wait().UntilElementExist(AsyncContent.By);
+            return this.TestObject.WebDriver.Wait().UntilElementExist(AsyncContent.By);
         }
     }
 }

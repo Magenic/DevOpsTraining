@@ -1,0 +1,18 @@
+
+
+parameters:
+- name: secureFile
+
+steps:
+- download: current
+  artifact: app
+- task: DownloadSecureFile@1
+  displayName: 'Download secure file'
+  inputs:
+    secureFile: ${{ parameters.secureFile }}
+- task: PowerShell@2
+  displayName: 'PowerShell Script'
+  inputs:
+    targetType: filePath
+    filePath: '$(Pipeline.Workspace)/app/DeploymentScripts/MSDep.ps1'
+    arguments: '-zip ''$(Pipeline.Workspace)\app\TestSite.zip'' -publish ''$(Agent.TempDirectory)\${{ parameters.secureFile }}'''

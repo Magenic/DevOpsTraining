@@ -1,0 +1,163 @@
+# ASP.NET Core (.NET Framework) 
+# Build and test ASP.NET Core projects targeting the full .NET Framework.
+# Add steps that publish symbols, save build artifacts, and more: 
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+
+trigger:
+- master
+
+pr:
+- master
+
+stages:
+- stage: 'Build'
+  displayName: 'Build the web application'
+  jobs: 
+  - job: 'BuildApp'
+    displayName: 'Build site job'
+    pool:
+      vmImage: 'windows-latest'
+
+    variables:
+      webSolution: 'WebApp\**\*.sln'
+      buildPlatform: 'Any CPU'
+      buildConfiguration: 'Release'
+
+    steps:
+    - task: NuGetToolInstaller@1
+
+    - task: NuGetCommand@2
+      inputs:
+        restoreSolution: '$(webSolution)'
+
+    - task: VSBuild@1
+      inputs:
+        solution: '$(webSolution)'
+        msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\TestSite.zip" /p:DeployIisAppPath="Default Web Site"'
+        platform: '$(buildPlatform)'
+        configuration: '$(buildConfiguration)'
+
+    - task: VSTest@2
+      inputs:
+        testSelector: 'testAssemblies'
+        testAssemblyVer2: |
+          WebApp\**\$(BuildConfiguration)\**\UnitTests.dll
+          !**\obj\**
+        searchFolder: '$(System.DefaultWorkingDirectory)'
+        testRunTitle: 'Unit tests'
+        platform: '$(buildPlatform)'
+        configuration: '$(buildConfiguration)'
+        codeCoverageEnabled: true
+
+    - task: CopyFiles@2
+      condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+      displayName: 'Copy deployment script'
+      inputs:
+        SourceFolder: DeploymentScript
+        Contents: '**\*'
+        TargetFolder: '$(build.artifactstagingdirectory)/DeploymentScripts'
+
+    - task: PublishSymbols@2
+      condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+      inputs:
+        SearchPattern: '**/bin/**/*.pdb'
+        SymbolServerType: 'TeamServices'
+
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish App Artifact'
+      inputs:
+        PathtoPublish: '$(build.artifactstagingdirectory)'
+        ArtifactName: 'app'
+      condition: and(succeededOrFailed(), ne(variables['Build.Reason'], 'PullRequest'))
+
+  - job: 'BuildAutomation'
+    displayName: 'Build automation job'
+    pool:
+      vmImage: 'windows-latest'
+
+    variables:
+      testSolution: 'TestAutomation\**\*.sln'
+      buildPlatform: 'Any CPU'
+      buildConfiguration: 'Release'
+
+    steps:
+    - task: NuGetToolInstaller@1
+
+    - task: NuGetCommand@2
+      inputs:
+        restoreSolution: '$(testSolution)'
+
+    - task: VSBuild@1
+      displayName: 'Build test automation solution'
+      inputs:
+        solution: 'TestAutomation\**\*.sln'
+        platform: '$(BuildPlatform)'
+        configuration: '$(BuildConfiguration)'
+
+    - task: CopyFiles@2
+      condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+      displayName: 'Copy test automation'
+      inputs:
+        SourceFolder: 'TestAutomation/DemoTests/Tests/bin/$(BuildConfiguration)/net471'
+        Contents: '**\*'
+        TargetFolder: '$(build.artifactstagingdirectory)'
+
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Automation Artifact'
+      inputs:
+        PathtoPublish: '$(build.artifactstagingdirectory)'
+        ArtifactName: 'automation'
+      condition: and(succeededOrFailed(), ne(variables['Build.Reason'], 'PullRequest'))
+
+- stage: 'Lower'
+  displayName: 'Deploy to the lower environment'
+  dependsOn: Build
+  condition: in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI')
+  jobs:
+  - deployment: Deploy_Lower
+    pool:
+      vmImage: 'windows-latest'
+    environment: Lower
+    variables:
+      BaseSiteUrl: $(LowerUrl)
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+            - template: Templates/deploy.yml
+              parameters:
+                secureFile: Lower.PublishSettings
+        on:
+          success:
+            steps:
+              - template: Templates/test.yml
+                parameters:
+                  testFiltercriteria: 'TestCategory=Smoke'
+                  baseSiteUrl: $(BaseSiteUrl)
+                  browser: HeadlessChrome
+
+- stage: 'Higher'
+  displayName: 'Deploy to the higher environment'
+  dependsOn: Lower
+  jobs:
+  - deployment: Deploy_Higher
+    pool:
+      vmImage: 'windows-latest'
+    environment: Higher
+    variables:
+      BaseSiteUrl: $(HigherUrl)
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+            - template: Templates/deploy.yml
+              parameters:
+                secureFile: Higher.PublishSettings
+        on:
+          success:
+            steps:
+              - template: Templates/test.yml
+                parameters:
+                  testFiltercriteria: 'TestCategory=Regression'
+                  baseSiteUrl: $(BaseSiteUrl)
+                  browser: Chrome

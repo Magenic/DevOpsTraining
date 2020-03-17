@@ -1,0 +1,23 @@
+parameters:
+- name: testFiltercriteria
+- name: baseSiteUrl
+- name: browser
+
+steps:
+- download: current
+  artifact: automation
+- task: VisualStudioTestPlatformInstaller@1
+  inputs:
+    packageFeedSelector: 'nugetOrg'
+    versionSelector: 'latestStable'
+- task: VSTest@2
+  inputs:
+    testSelector: 'testAssemblies'
+    testAssemblyVer2: |
+      **\*test*.dll
+      !**\*TestAdapter.dll
+      !**\obj\**
+    searchFolder: '$(Pipeline.Workspace)/automation/'
+    testFiltercriteria: ${{ parameters.testFiltercriteria }}
+    runSettingsFile: '$(Pipeline.Workspace)/automation/Parallel.RunSettings'
+    overrideTestrunParameters: ' -SeleniumMaqs:WebSiteBase ${{ parameters.baseSiteUrl }} -SeleniumMaqs:Browser ${{ parameters.browser }}'
