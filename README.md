@@ -12,7 +12,7 @@ TODO: Guide users through getting your code up and running on their own system. 
 Follow along the excersize for each of the 5 sessions , This will help you have better understanding of DevOps
 
 # Key Overview of Exercises
-1. [Create VSTS account and DevOpsDemo Project](../Exercises/Create VSTS account and DevOpsDemo Project.md)
+1. [Create VSTS account and DevOpsDemo Project](../Exercises/Create_VSTS_account_and_DevOpsDemo_Project.md)
 2. Create 2 Azure Web App Services
 3. Create Build Definition and build master branch
 4. Create develop branch and Gated Build to enable continuous integration and observe CI is working
