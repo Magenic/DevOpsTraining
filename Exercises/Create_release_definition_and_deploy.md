@@ -34,7 +34,7 @@
   * Click on the lightning symbol attached to the master artifact
   * Enable Continuous deployment trigger for master branch
 * Hover over the lower environment stage and click +
-* Add stage tasks you did for the lower environment but use the higher publish settings file instead. 
+* Add stage tasks as you did for the lower environment but use the higher publish settings file instead. 
 * Add approval gate
   * Click on the lighting bolt on your hire environment stage
   * Enable Pre-deployment approvals
@@ -43,4 +43,3 @@
   * Make sure changes automatically go to lower and you are prompted to approve changes to higher
 
 
-   

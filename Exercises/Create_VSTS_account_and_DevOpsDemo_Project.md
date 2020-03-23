@@ -12,4 +12,4 @@
   * If prompted, switch to the default repository
   * Import repository: https://github.com/Magenic/DevOpsTraining.git
 
-You now have all the code you will need in order to complete the course.  You can also create your own web application (or whatever else you what to create), but this course is far easier if your use the provide code.
+You now have all the code you will need in order to complete the course.  You can also create your own web application (or whatever else you what to create), but this course will be easier if your use theprivided code above.
