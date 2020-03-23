@@ -1,31 +1,29 @@
 # Create build definition for Master CI Build
-
-* Navigate to Build and Release -> Builds
-* Select +New to create a new build definition
-* Select ASP.NET Core (.NET Framework) template and Apply
+* Navigate to your project in Azure DevOps
+* Navigate to Pipelines -> Pipelines
+* Select "New pipeline"
+* Select "Use the classic editor" - it is down at the bottom and a little hard to notice
+  * Make sure you have your project and repository selected as well as the Master branch
+  * Continue
+  * Select ASP.NET Core (.NET Framework) template and Apply
 * Setting up Build Definition for master branch
   * Rename to Master CI Build
-  * The name must match the name used in the msdeploy command line later in the course.
-  * Build process -> Agent queue: Select Hosted VS2017
-  * Use NuGut 4.3.0 unchanged
-  * NuGet restore
-  * Clone Build solution: Right click -> Clone task
-  * Rename Build solution task -> Build Web App
-  * Unlink solution and modify field to WebApp\**.*sln
-  * Rename Build solution copy task -> Build Automation
-  * Clear MSBuild Arguments field in Build Automation task
-  * Unlink Solution and modify field to TestAutomation\**.*sln
-  * Modify Test assemblies field to:
-```
-WebApp\**\$(BuildConfiguration)\*test*.dll
-!**\obj\**
-```
-  * Add new task: Utility -> Copy Task
-  * Source Folder: TestAutomation/DemoTests/Tests/bin/$(BuildConfiguration)
-  * Contents: **\*
-  * Target Folder: $(build.artifactstagingdirectory)/Automation
-  * Save
-    * Queue Build
+  * Agent Specification: Windows 2019
+  * In the agent job
+    * Clone Build solution: Right click -> Clone task
+    * Rename Build solution task -> Build Web App
+    * Unlink solution and modify field to WebApp\**.*sln
+    * Rename Build solution copy task -> Build Automation
+    * Clear MSBuild Arguments field in Build Automation task
+    * Unlink Solution and modify field to TestAutomation\**.*sln
+    * Modify Test assemblies field to: ```WebApp\**\$(BuildConfiguration)\*test*.dll
+  !**\obj\**```
+    * Add new task: Utility -> Copy Task
+    * Source Folder: TestAutomation/DemoTests/Tests/bin/$(BuildConfiguration)
+    * Contents: **\*
+    * Target Folder: $(build.artifactstagingdirectory)/Automation
+    * Save
+      * Queue Build
 * Queue Build and build passes
 * Enable CI Trigger
   * Edit build definition
@@ -35,15 +33,6 @@ WebApp\**\$(BuildConfiguration)\*test*.dll
 * Save definition
 * Turn on Branch Policies
   * Enable Check for comment resolution - Required
-* Create develop branch based on master
-  * Navigate to Branches
-  * Select New Branch
-  * Name: develop
-  * Based on: master
-  * Select Create branch
-  * Navigate to develop's  branch policies and enable Protect this branch
-    * Check for comment resolution set to Optional
-  * Navigate to Version Control and expand repositories and set develop as default branch
 * Create Gated Build
   * Right click -> Clone current build
   * Rename to Master Gated Build

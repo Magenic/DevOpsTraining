@@ -3,17 +3,13 @@
 * Create your own VSTS account
   * Go to https://www.visualstudio.com/ -> sign in as your magenic account
   * View your profile
-  * Create new account -> enter yournamedevopsdemo.visualstudio.com
-  * Manage code using: Git
+  * Create new organization -> enter yournamedevopsdemo
   * Project name: YourNameDevOpsDemo
-  * Organize work using: Agile
-  * Host your projects in: Central US
-  * You can share the work with other users of: Magenic
-  * Continue
-* Push Demo Code to project
-  * Clone to Visual Studio
-  * Extract DevOpsDemo zip
-  * Copy DevOpsDemo files to directory where repository path is located
-  * Git push
-    * Commit changes
-    * Sync/push
+  * You can choose either public or private
+  * Create project
+* Clone sample code
+  * Got to Repos -> Files
+  * If prompted, switch to the default repository
+  * Import repository: https://github.com/Magenic/DevOpsTraining.git
+
+You now have all the code you will need in order to complete the course.  You can also create your own web application (or whatever else you what to create), but this course is far easier if your use the provide code.
