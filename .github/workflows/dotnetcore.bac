@@ -1,0 +1,115 @@
+name: .NET Core
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - run: mkdir -p artifactApp
+    - run: mkdir -p artifactTests
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.101
+    - name: test app with dotnet
+      run: dotnet test WebApp/TestSite.sln #/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /maxcpucount:1 /p:configuration="Release" /p:DesktopBuildPackageLocation="${{github.workspace}}/artifactApp/package.zip"
+    - name: Publish app with dotnet
+      run: dotnet publish WebApp/TestSite.sln -c Release -o ${{github.workspace}}/artifactApp
+    - name: Build automated tests with dotnet
+      run: dotnet build TestAutomation/DemoTests.sln -o "${{github.workspace}}/artifactTests"
+    - name: Upload app artifact
+      uses: actions/upload-artifact@v1.0.0
+      with:
+        name: app
+        path: artifactApp
+    - name: Upload test artifact
+      uses: actions/upload-artifact@v1.0.0
+      with:
+        name: tests
+        path: artifactTests
+
+  deployToLower:
+    if: github.ref == 'refs/heads/master'
+    needs: build
+    runs-on: windows-latest
+    steps:
+      - name: download app
+        uses: actions/download-artifact@v1
+        with:
+          name: app
+          path: artifactApp
+      - name: 'Run Azure webapp deploy action using publish profile credentials'
+        uses: azure/webapps-deploy@v2
+        with: 
+          app-name: "TTWDevOpsLower"
+          publish-profile: ${{ secrets.LowerPubProfile  }} 
+          package: 'artifactApp'
+          
+  testInLower:
+    needs: deployToLower
+    runs-on: windows-latest
+    steps:
+      - name: download tests
+        uses: actions/download-artifact@v1
+        with:
+          name: tests
+          path: artifactTests
+      
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.101
+      - name: run tests
+        shell: cmd
+        run: dotnet vstest artifactTests\tests.dll --TestCaseFilter:TestCategory=Smoke /logger:"trx;LogFileName=${{github.workspace}}/artifactTests/logs/results.trx" --Settings:artifactTests\Parallel.RunSettings --ResultsDirectory:testResults  -- TestRunParameters/Parameter[contains(@name,'SeleniumMaqs:Browser')]/@value="Chrome"  TestRunParameters/Parameter[contains(@name,'SeleniumMaqs:WebSiteBase')]/@value="https://ttwdevopslower.azurewebsites.net"
+      - name: Upload test results
+        if: failure()
+        uses: actions/upload-artifact@v1.0.0
+        with:
+          name: lowerTestResults
+          path: artifactTests\logs
+  deployToHigher:
+    needs: testInLower
+    runs-on: windows-latest
+    steps:
+      - name: download app
+        uses: actions/download-artifact@v1
+        with:
+          name: app
+          path: artifactApp
+      - name: 'Run Azure webapp deploy action using publish profile credentials'
+        uses: azure/webapps-deploy@v2
+        with: 
+          app-name: "TTWDevOpsHigher"
+          publish-profile: ${{ secrets.HigherPubProfile  }} 
+          package: 'artifactApp'
+          
+  testInHigher:
+    needs: deployToHigher
+    runs-on: windows-latest
+    steps:
+      - name: download tests
+        uses: actions/download-artifact@v1
+        with:
+          name: tests
+          path: artifactTests
+      
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.101
+      - name: run tests
+        shell: cmd
+        run: dotnet vstest artifactTests\tests.dll --TestCaseFilter:TestCategory=Regression /logger:"trx;LogFileName=${{github.workspace}}/artifactTests/logs/results.trx" --Settings:artifactTests\Parallel.RunSettings  -- TestRunParameters/Parameter[contains(@name,'SeleniumMaqs:Browser')]/@value="Chrome"  TestRunParameters/Parameter[contains(@name,'SeleniumMaqs:WebSiteBase')]/@value="https://ttwdevopshigher.azurewebsites.net"
+      - name: Upload test results
+        if: failure()
+        uses: actions/upload-artifact@v1.0.0
+        with:
+          name: higherTestResults
+          path: artifactTests\logs
