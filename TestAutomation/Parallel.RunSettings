@@ -11,6 +11,6 @@
     </Parallelize>
   </MSTest>
   <TestRunParameters>
-    <Parameter name="SeleniumMaqs:Browser" value="Remote" />
+    <!--<Parameter name="SeleniumMaqs:Browser" value="Remote" />-->
   </TestRunParameters>  
 </RunSettings>
