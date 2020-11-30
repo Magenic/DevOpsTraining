@@ -100,7 +100,7 @@ namespace PageModel.SubSite
         {
             EnterCredentials(userName, password);
             LoginButton.Click();
-            LoginError.GetTheVisibleElement();
+            LoginError.GetRawVisibleElement();
         }
 
         /// <summary>
