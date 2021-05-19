@@ -6,11 +6,23 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Remote;
 using System;
 using System.Collections.Generic;
+using WebDriverManager;
+using WebDriverManager.DriverConfigs.Impl;
+using WebDriverManager.Helpers;
 
 namespace Tests
 {
     public class BaseSelenium : BaseSeleniumTest
     {
+        [AssemblyInitialize()]
+        public static void AssemblyInit(TestContext context)
+        {
+            if (SeleniumConfig.GetBrowserName().Equals("Chrome", System.StringComparison.CurrentCultureIgnoreCase))
+            {
+                new DriverManager().SetUpDriver(new ChromeConfig(), VersionResolveStrategy.MatchingBrowser);
+            }
+        }
+
         [TestInitialize]
         public void SetName()
         {
